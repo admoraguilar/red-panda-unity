@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MicroFlappyBird
+namespace FlappyBird
 {
 	public class BirdController : MonoBehaviour
 	{

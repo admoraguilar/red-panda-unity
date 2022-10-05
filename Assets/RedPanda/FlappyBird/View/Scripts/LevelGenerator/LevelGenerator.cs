@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MicroFlappyBird
+namespace FlappyBird
 {
 	public class LevelGenerator : MonoBehaviour
 	{

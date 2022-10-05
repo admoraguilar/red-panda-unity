@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MicroFlappyBird
+namespace FlappyBird
 {
 	[RequireComponent(typeof(Rigidbody2D))]
 	public class BirdCharacter : MonoBehaviour
