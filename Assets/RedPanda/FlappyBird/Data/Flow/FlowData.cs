@@ -7,30 +7,17 @@ namespace FlappyBird
 {
 	public class FlowData
 	{
-		public int la = 1;
+		public event Action OnUIFlowChanged = delegate { };
 
-		private string _flow = string.Empty;
+		private string _uiFlow = string.Empty;
 
-		private int _flowCount = 0;
-
-		private float test = 0.2f;
-
-		private float test3 = 0.5f;
-
-		private double test4 = 1.4f;
-
-		public string flow
+		public string uiFlow
 		{
-			get => _flow;
-			set => _flow = value;
-		}
-
-		public int flowCount => _flowCount;
-
-		public float testing2
-		{
-			get => test3;
-			set => test3 = value;
+			get => _uiFlow;
+			set {
+				_uiFlow = value;
+				OnUIFlowChanged();
+			}
 		}
 	}
 }

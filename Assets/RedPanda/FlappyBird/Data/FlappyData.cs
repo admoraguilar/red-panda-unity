@@ -19,6 +19,8 @@ namespace FlappyBird
 
 	public class FlappyData
 	{
+		public static readonly FlappyData instance = new FlappyData();
+
 		private List<Dictionary<string, List<object>>> _dataSlots = new List<Dictionary<string, List<object>>>();
 
 		public string filePath => PathUtilities.GetPath($@"C:\Users\Admor\Desktop\flappy-data.json");

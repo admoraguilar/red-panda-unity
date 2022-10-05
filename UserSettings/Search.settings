@@ -13,6 +13,12 @@ scopes = {
 	"last_search.9824D059" = ""
 	"OpenInspectorPreview.9824D059" = "0"
 	"currentGroup.9824D059" = "all"
+	"last_search.AE24D059" = "p: t:texture"
+	"OpenInspectorPreview.AE24D059" = "1"
+	"currentGroup.AE24D059" = "all"
+	"last_search.8BEC98E7" = ""
+	"OpenInspectorPreview.8BEC98E7" = "0"
+	"currentGroup.8BEC98E7" = "asset"
 }
 providers = {
 	adb = {
@@ -79,14 +85,15 @@ providers = {
 objectSelectors = {
 }
 recentSearches = [
+	"p: t:texture"
 ]
 searchItemFavorites = [
 ]
 savedSearchesSortOrder = 0
-showSavedSearchPanel = false
+showSavedSearchPanel = true
 expandedQueries = [
 ]
 queryBuilder = false
 ignoredProperties = "id;name;classname;imagecontentshash"
-helperWidgetCurrentArea = "all"
+helperWidgetCurrentArea = "m:"
 disabledIndexers = ""

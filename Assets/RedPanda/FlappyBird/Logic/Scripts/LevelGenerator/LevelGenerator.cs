@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FlappyBird
@@ -20,6 +21,21 @@ namespace FlappyBird
 		private bool _isEditorDirty = false;
 
 #endif
+
+		public void StartGenerate()
+		{
+			StopAllCoroutines();
+			StartCoroutine(GenerationRoutine());
+		}
+
+		public void StopGenerate()
+		{
+			StopAllCoroutines();
+			foreach(Transform obstacle in _obstacleInstanceList) {
+				Destroy(obstacle.gameObject);
+			}
+			_obstacleInstanceList.Clear();
+		}
 
 		private IEnumerator GenerationRoutine()
 		{
@@ -45,7 +61,11 @@ namespace FlappyBird
 				while(_obstacleInstanceList.Count < maxObstacleGeneration) {
 					Transform obstaclePrefab = GetObstaclePrefab();
 					Transform obstacleInstance = Instantiate(obstaclePrefab, _transform);
-					obstacleInstance.localPosition = Vector3.zero;
+					obstacleInstance.name = obstaclePrefab.name;
+					obstacleInstance.localPosition = new Vector3(
+						0f,
+						Random.Range(-2f, 2f),
+						0f);
 					_obstacleInstanceList.Add(obstacleInstance);
 				}
 
@@ -55,8 +75,8 @@ namespace FlappyBird
 					Transform obstacleInstance = _obstacleInstanceList[i];
 					obstacleInstance.position = new Vector3(
 						pivot.position.x + obstacleDistance,
-						pivot.position.y,
-						pivot.position.z);
+						obstacleInstance.position.y,
+						obstacleInstance.position.z);
 					pivot = obstacleInstance;
 				}
 
@@ -84,13 +104,6 @@ namespace FlappyBird
 		private void Awake()
 		{
 			_transform = GetComponent<Transform>();
-		}
-
-		private void Update()
-		{
-			if(Input.GetKeyDown(KeyCode.R)) {
-				StartCoroutine(GenerationRoutine());
-			}
 		}
 
 		private void FixedUpdate()
