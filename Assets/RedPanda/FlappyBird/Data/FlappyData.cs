@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
-using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -142,6 +141,7 @@ namespace FlappyBird
 			protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
 			{
 				List<JsonProperty> props = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+					.Where(p => !typeof(Delegate).IsAssignableFrom(p.FieldType))
 					.Select(p => base.CreateProperty(p, memberSerialization))
 					.ToList();
 

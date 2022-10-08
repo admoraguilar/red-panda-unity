@@ -95,6 +95,11 @@ namespace FlappyBird
 			_gameplayLogic.OnDisable();
 			_uiLogic.OnDisable();
 		}
+
+		private void OnDestroy()
+		{
+			FlappyData.instance.Serialize();
+		}
 	}
 
 	[Serializable]
@@ -160,6 +165,7 @@ namespace FlappyBird
 	{
 		public TMP_Text _flowText = null;
 		public Button startButton = null;
+		public Button jumpButton = null;
 
 		private GameData _gameData = null;
 
@@ -176,8 +182,10 @@ namespace FlappyBird
 
 			if(_gameData.flow == GameData.Flow.Game.ToString()) {
 				startButton.gameObject.SetActive(false);
+				jumpButton.gameObject.SetActive(true);
 			} else {
 				startButton.gameObject.SetActive(true);
+				jumpButton.gameObject.SetActive(false);
 			}
 		}
 
@@ -188,6 +196,11 @@ namespace FlappyBird
 			} else if(_gameData.flow == GameData.Flow.GameOver.ToString()) {
 				_gameData.Set(GameData.Flow.Menu.ToString());
 			}
+		}
+
+		private void OnJumpButtonClick()
+		{
+
 		}
 
 		public void Awake()
@@ -204,12 +217,14 @@ namespace FlappyBird
 		{
 			_gameData.OnFlowChange += OnGameDataFlowChanged;
 			startButton.onClick.AddListener(OnStartButtonClick);
+			jumpButton.onClick.AddListener(OnJumpButtonClick);
 		}
 
 		public void OnDisable()
 		{
 			_gameData.OnFlowChange -= OnGameDataFlowChanged;
 			startButton.onClick.RemoveListener(OnStartButtonClick);
+			jumpButton.onClick.RemoveListener(OnJumpButtonClick);
 		}
 	}
 }
