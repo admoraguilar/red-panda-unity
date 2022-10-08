@@ -6,7 +6,7 @@ namespace FlappyBird
 	public class GameInputLogic : MonoBehaviour
 	{
 		private DefaultGameMode _gameMode = null;
-		private DefaultUI _ui = null;
+		private DefaultTestUI _ui = null;
 
 		private void InternalOnJumpButtonTap()
 		{
@@ -16,17 +16,23 @@ namespace FlappyBird
 		private void Awake()
 		{
 			_gameMode = Blackboard.Get<DefaultGameMode>();
-			_ui = Blackboard.Get<DefaultUI>();
+			_ui = Blackboard.Get<DefaultTestUI>();
 		}
 
-		private void OnEnable()
+		private void Update()
 		{
-			_ui.OnJumpButtonTap += InternalOnJumpButtonTap;
+			if(!_gameMode.isInGame) { return; }
+			if(Input.GetMouseButtonDown(0)) { InternalOnJumpButtonTap(); }
 		}
 
-		private void OnDisable()
-		{
-			_ui.OnJumpButtonTap -= InternalOnJumpButtonTap;
-		}
+		//private void OnEnable()
+		//{
+		//	_ui.OnJumpButtonTap += InternalOnJumpButtonTap;
+		//}
+
+		//private void OnDisable()
+		//{
+		//	_ui.OnJumpButtonTap -= InternalOnJumpButtonTap;
+		//}
 	}
 }

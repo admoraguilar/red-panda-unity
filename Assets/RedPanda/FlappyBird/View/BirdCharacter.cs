@@ -32,7 +32,6 @@ namespace FlappyBird
 		private void OnTriggerEnter2D(Collider2D collider)
 		{
 			OnTriggerEnter2DCallback(collider);
-			Debug.Log("TriggerEnter");
 		}
 	}
 }

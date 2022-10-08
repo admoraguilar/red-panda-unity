@@ -5,7 +5,7 @@ using TMPro;
 
 namespace FlappyBird
 {
-	public class DefaultUI : MonoBehaviour
+	public class DefaultTestUI : MonoBehaviour
 	{
 		public enum Mode
 		{

@@ -6,17 +6,22 @@ namespace FlappyBird
 	public class FlowDirectoryData : MonoBehaviour
 	{
 		[SerializeField]
-		private Node _menu = null;
+		private Node _initialize = null;
 
 		[SerializeField]
-		private Node _game = null;
+		private Node _preGame = null;
+
+		[SerializeField]
+		private Node _inGame = null;
 
 		[SerializeField]
 		private Node _gameOver = null;
 
-		public Node menu => _menu;
+		public Node initialize => _initialize;
 
-		public Node game => _game;
+		public Node preGame => _preGame;
+
+		public Node inGame => _inGame;
 
 		public Node gameOver => _gameOver;
 	}

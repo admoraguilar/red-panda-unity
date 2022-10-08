@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using UnityEngine;
 using WaterToolkit;
 
 namespace FlappyBird
@@ -16,13 +17,15 @@ namespace FlappyBird
 		public IDataVersion ToNextVersion();
 	}
 
-	public class FlappyData
+	public class DataSerializer : MonoBehaviour
 	{
-		public static readonly FlappyData instance = new FlappyData();
+		[SerializeField]
+		private string _fileName = "saveData";
 
 		private List<Dictionary<string, List<object>>> _dataSlots = new List<Dictionary<string, List<object>>>();
 
-		public string filePath => PathUtilities.GetPath($@"C:\Users\Admor\Desktop\flappy-data.json");
+		//public string filePath => PathUtilities.GetPath($@"C:\Users\Admor\Desktop\flappy-data.json");
+		public string filePath => PathUtilities.GetPath(Path.Combine(Application.persistentDataPath, $"{_fileName}.json"));
 
 		public int slotCount => _dataSlots.Count;
 
