@@ -818,7 +818,9 @@ PlayerSettings:
   webGLMemoryLinearGrowthStep: 16
   webGLMemoryGeometricGrowthStep: 0.2
   webGLMemoryGeometricGrowthCap: 96
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: gameanalytics_max_enabled
+    iPhone: gameanalytics_max_enabled
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
