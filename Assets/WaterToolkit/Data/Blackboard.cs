@@ -7,7 +7,7 @@ namespace WaterToolkit.Data
 {
 	public class Blackboard
 	{
-		public static readonly Blackboard instance = new Blackboard();
+		private static readonly Blackboard instance = new Blackboard();
 
 		public static T GetNearest<T>(GameObject source, Predicate<T> match) where T : Component
 		{

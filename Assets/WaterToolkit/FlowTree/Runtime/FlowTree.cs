@@ -18,6 +18,9 @@ namespace WaterToolkit.FlowTrees
 		private List<Node> _nodeStack = new List<Node>();
 
 		[SerializeField]
+		private bool _isSetRootAtStart = false;
+
+		[SerializeField]
 		private Node _root = null;
 
 		public Node root => _root;
@@ -142,7 +145,7 @@ namespace WaterToolkit.FlowTrees
 
 		private void Start()
 		{
-			Next();
+			if(_isSetRootAtStart) { Next(); }
 		}
 
 		private void OnDestroy()
