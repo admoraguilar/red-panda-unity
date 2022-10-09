@@ -4,6 +4,7 @@ namespace FlappyBird
 {
 	public class MaterialTilingScroller : MonoBehaviour
 	{
+		public bool shouldScroll = true;
 		public Vector2 direction = Vector2.zero;
 		public float speed = 2f;
 
@@ -16,7 +17,9 @@ namespace FlappyBird
 
 		private void FixedUpdate()
 		{
-			_renderer.material.mainTextureOffset += direction * speed * Time.deltaTime;
+			if(shouldScroll) {
+				_renderer.material.mainTextureOffset += direction * speed * Time.deltaTime;
+			}
 		}
 	}
 }

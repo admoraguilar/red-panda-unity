@@ -9,7 +9,7 @@ namespace FlappyBird
 		private DefaultGameMode _gameMode = null;
 		private DefaultUI _ui = null;
 		private FlowDirectoryData _flowDirectoryData = null;
-		private Transition _transition = null;
+		private Sequencer _transition = null;
 		private Fader _fader = null;
 		private Scorer _scorer = null;
 		private DataSerializer dataSerializer = null;
@@ -45,7 +45,7 @@ namespace FlappyBird
 
 		private void OnBirdCollideOnPipeMethod()
 		{
-			if(_gameMode.gamePhase == DefaultGameMode.GamePhase.GameOver) { return; }
+			if(!_gameMode.isInGame) { return; }
 			_flowDirectoryData.gameOver.Set();
 		}
 
@@ -57,7 +57,7 @@ namespace FlappyBird
 
 		private void OnBirdCollideOnGroundMethod()
 		{
-			if(_gameMode.gamePhase == DefaultGameMode.GamePhase.GameOver) { return; }
+			if(!_gameMode.isInGame) { return; }
 			_flowDirectoryData.gameOver.Set();
 		}
 
@@ -72,6 +72,7 @@ namespace FlappyBird
 
 		private void OnFlowPreGameVisitMethod()
 		{
+			_gameMode.PreGame();
 			_scorer.current = 0;
 			_ui.inGameScreen.SetCurrentScore(_scorer.current);
 
@@ -103,7 +104,7 @@ namespace FlappyBird
 			_gameMode = Blackboard.Get<DefaultGameMode>();
 			_ui = Blackboard.Get<DefaultUI>();
 			_flowDirectoryData = Blackboard.Get<FlowDirectoryData>();
-			_transition = Blackboard.Get<Transition>();
+			_transition = Blackboard.Get<Sequencer>();
 			_fader = Blackboard.Get<Fader>();
 			_scorer = Blackboard.Get<Scorer>();
 			dataSerializer = Blackboard.Get<DataSerializer>();

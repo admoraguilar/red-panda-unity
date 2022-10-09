@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FlappyBird
 {
-	public class Transition : MonoBehaviour
+	public class Sequencer : MonoBehaviour
 	{
 		public event Action OnStart = delegate { };
 		public event Action OnFinish = delegate { };
@@ -22,7 +22,7 @@ namespace FlappyBird
 		public void Run() {
 			RunNextFrame(() => {
 				StopAllCoroutines();
-				StartCoroutine(TransitionRoutine());
+				StartCoroutine(SequencerRoutine());
 			}); 
 		}
 
@@ -37,7 +37,7 @@ namespace FlappyBird
 			}
 		}
 
-		private IEnumerator TransitionRoutine()
+		private IEnumerator SequencerRoutine()
 		{
 			OnStart();
 			bool shouldRun = true;

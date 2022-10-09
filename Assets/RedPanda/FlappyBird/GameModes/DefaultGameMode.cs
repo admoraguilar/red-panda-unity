@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Rendering;
 using WaterToolkit;
 
 namespace FlappyBird
@@ -10,14 +9,12 @@ namespace FlappyBird
 		public enum GamePhase
 		{
 			None,
-			GameInit,
-			InGame,
+			PreGame,
+			InGamePhase1,
+			InGamePhase2,
 			GameOver
 		};
 
-		public event Action OnInitGame = delegate { };
-		public event Action OnStartGame = delegate { };
-		public event Action OnStopGame = delegate { };
 		public event Action OnBirdCollideOnPipe = delegate { };
 		public event Action OnBirdPassThruPipe = delegate { };
 		public event Action OnBirdCollideOnGround = delegate { };
@@ -29,8 +26,15 @@ namespace FlappyBird
 		[SerializeField]
 		private LevelGenerator _levelGenerator = null;
 
+		[SerializeField]
+		private MaterialTilingScroller _groundScroller = null;
+
 		private BirdCharacter _birdInstance = null;
 		private GamePhase _gamePhase = default;
+
+		public LevelGenerator levelGenerator => _levelGenerator;
+
+		public MaterialTilingScroller groundScroller => _groundScroller;
 
 		public BirdCharacter birdInstance
 		{
@@ -38,11 +42,6 @@ namespace FlappyBird
 			private set => _birdInstance = value;
 		}
 
-		public LevelGenerator levelGenerator
-		{
-			get => _levelGenerator;
-			private set => _levelGenerator = value;
-		}
 
 		public GamePhase gamePhase
 		{
@@ -50,18 +49,22 @@ namespace FlappyBird
 			private set => _gamePhase = value;
 		}
 
-		public void InitializePreGame()
-		{
-			if(gamePhase == GamePhase.GameInit) { return; }
-			gamePhase = GamePhase.GameInit;
+		public bool isInGame => gamePhase == GamePhase.InGamePhase1 || gamePhase == GamePhase.InGamePhase2;
 
-			
+		public void PreGame()
+		{
+			if(gamePhase == GamePhase.PreGame) { return; }
+			gamePhase = GamePhase.PreGame;
+
+			groundScroller.shouldScroll = true;
 		}
 
 		public void StartGame()
 		{
-			if(gamePhase == GamePhase.None || gamePhase == GamePhase.GameOver) {
-				gamePhase = GamePhase.GameInit;
+			groundScroller.shouldScroll = true;
+
+			if(gamePhase != GamePhase.InGamePhase1 && !isInGame) {
+				gamePhase = GamePhase.InGamePhase1;
 
 				birdInstance = Instantiate(_birdPrefab);
 				birdInstance.rigidbody2D.simulated = false;
@@ -80,18 +83,15 @@ namespace FlappyBird
 				};
 
 				birdInstance.OnJump += () => { 
-					if(gamePhase == GamePhase.GameInit) { StartGame(); }
+					if(gamePhase == GamePhase.InGamePhase1) { StartGame(); }
 					OnBirdJump(); 
 				};
 
-				OnInitGame();
-			} else if(gamePhase == GamePhase.GameInit) {
-				gamePhase = GamePhase.InGame;
+			} else if(gamePhase != GamePhase.InGamePhase2 && isInGame) {
+				gamePhase = GamePhase.InGamePhase2;
 
 				if(birdInstance != null) { birdInstance.rigidbody2D.simulated = true; }
 				levelGenerator.StartGenerate();
-
-				OnStartGame();
 			}
 		}
 
@@ -100,15 +100,17 @@ namespace FlappyBird
 			if(gamePhase == GamePhase.GameOver) { return; }
 			gamePhase = GamePhase.GameOver;
 
-			levelGenerator.StopMovement();
+			if(birdInstance != null) { birdInstance.Hit(); }
 
-			OnStopGame();
+			levelGenerator.shouldMove = false;
+			groundScroller.shouldScroll = false;
 		}
 
 		public void CleanupGame()
 		{
 			if(_birdInstance != null) { Destroy(birdInstance.gameObject); }
 			levelGenerator.StopGenerate();
+			groundScroller.shouldScroll = true;
 		}
 	}
 }

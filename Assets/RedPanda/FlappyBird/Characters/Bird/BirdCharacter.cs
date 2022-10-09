@@ -33,6 +33,12 @@ namespace FlappyBird
 			OnJump();
 		}
 
+		public void Hit()
+		{
+			_rigidbody2D.velocity = Vector2.zero;
+			_rigidbody2D.AddForce(Vector2.up * (jumpForceMultipier * .7f), ForceMode2D.Impulse);
+		}
+
 		private void Awake()
 		{
 			_transform = GetComponent<Transform>();
