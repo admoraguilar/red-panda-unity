@@ -21,7 +21,11 @@ namespace FlappyBird
 
 		private void Update()
 		{
-			if(!_gameMode.isInGame) { return; }
+			if(_gameMode.gamePhase != DefaultGameMode.GamePhase.GameInit &&
+			   _gameMode.gamePhase != DefaultGameMode.GamePhase.InGame) { 
+				return; 
+			}
+
 			if(Input.GetMouseButtonDown(0)) { InternalOnJumpButtonTap(); }
 		}
 

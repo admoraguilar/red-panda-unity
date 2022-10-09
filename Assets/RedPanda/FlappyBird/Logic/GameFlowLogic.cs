@@ -39,11 +39,13 @@ namespace FlappyBird
 
 		private void OnRetryButtonTapMethod()
 		{
+			_gameMode.CleanupGame();
 			FadeTransition(() => _flowDirectoryData.preGame.Set());
 		}
 
 		private void OnBirdCollideOnPipeMethod()
 		{
+			if(_gameMode.gamePhase == DefaultGameMode.GamePhase.GameOver) { return; }
 			_flowDirectoryData.gameOver.Set();
 		}
 
@@ -51,6 +53,12 @@ namespace FlappyBird
 		{
 			_scorer.current++;
 			_ui.inGameScreen.SetCurrentScore(_scorer.current);
+		}
+
+		private void OnBirdCollideOnGroundMethod()
+		{
+			if(_gameMode.gamePhase == DefaultGameMode.GamePhase.GameOver) { return; }
+			_flowDirectoryData.gameOver.Set();
 		}
 
 		private void OnFlowInitializeVisitMethod()
@@ -110,6 +118,7 @@ namespace FlappyBird
 		{
 			_gameMode.OnBirdCollideOnPipe += OnBirdCollideOnPipeMethod;
 			_gameMode.OnBirdPassThruPipe += OnBirdPassThruPipeMethod;
+			_gameMode.OnBirdCollideOnGround += OnBirdCollideOnGroundMethod;
 			_ui.preGameScreen.OnPlayButtonTap += OnStartButtonTapMethod;
 			_ui.gameOverScreen.OnRetryButtonTap += OnRetryButtonTapMethod;
 			_flowDirectoryData.initialize.OnVisit += OnFlowInitializeVisitMethod;
@@ -122,6 +131,7 @@ namespace FlappyBird
 		{
 			_gameMode.OnBirdCollideOnPipe -= OnBirdCollideOnPipeMethod;
 			_gameMode.OnBirdPassThruPipe -= OnBirdPassThruPipeMethod;
+			_gameMode.OnBirdCollideOnGround -= OnBirdCollideOnGroundMethod;
 			_ui.preGameScreen.OnPlayButtonTap -= OnStartButtonTapMethod;
 			_ui.gameOverScreen.OnRetryButtonTap -= OnRetryButtonTapMethod;
 			_flowDirectoryData.initialize.OnVisit -= OnFlowInitializeVisitMethod;

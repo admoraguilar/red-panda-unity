@@ -12,6 +12,7 @@ namespace FlappyBird
 		public float obstacleMoveSpeed = 5f;
 
 		private List<Transform> _obstacleInstanceList = new List<Transform>();
+		private bool _shouldMove = false;
 
 		private Transform _transform = null;
 
@@ -25,6 +26,7 @@ namespace FlappyBird
 		{
 			StopAllCoroutines();
 			StartCoroutine(GenerationRoutine());
+			_shouldMove = true;
 		}
 
 		public void StopGenerate()
@@ -34,11 +36,21 @@ namespace FlappyBird
 				Destroy(obstacle.gameObject);
 			}
 			_obstacleInstanceList.Clear();
+
+			_shouldMove = false;
+		}
+
+		public void StopMovement()
+		{
+			StopAllCoroutines();
+			_shouldMove = false;
 		}
 
 		private IEnumerator GenerationRoutine()
 		{
 			while(true) {
+				Debug.Log("Generation Routine");
+
 				bool isDirty = false;
 
 #if UNITY_EDITOR
@@ -107,8 +119,10 @@ namespace FlappyBird
 
 		private void FixedUpdate()
 		{
-			foreach(Transform obstacleInstance in _obstacleInstanceList) {
-				obstacleInstance.position += Vector3.left * obstacleMoveSpeed * Time.deltaTime;
+			if(_shouldMove) {
+				foreach(Transform obstacleInstance in _obstacleInstanceList) {
+					obstacleInstance.position += Vector3.left * obstacleMoveSpeed * Time.deltaTime;
+				}
 			}
 		}
 
