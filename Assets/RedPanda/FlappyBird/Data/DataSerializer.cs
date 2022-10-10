@@ -73,6 +73,8 @@ namespace FlappyBird
 
 		public void Deserialize()
 		{
+			if(!File.Exists(filePath)) { return; }
+
 			_dataSlots = JsonConvert.DeserializeObject<List<Dictionary<string, List<object>>>>(
 				File.ReadAllText(filePath), 
 				new JsonSerializerSettings {
