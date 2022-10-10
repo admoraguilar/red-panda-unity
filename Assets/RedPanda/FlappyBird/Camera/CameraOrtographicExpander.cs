@@ -50,8 +50,6 @@ namespace FlappyBird
 			} else if(_mode == Mode.Fixed) {
 				_camera.orthographicSize = preferredVerticalExtent;
 			}
-
-			Debug.Log($"Update extents: {_baseOrthographicSize} - {preferredVerticalExtent} = {preferredHorizontalExtent}");
 		}
 
 		private void Awake()
