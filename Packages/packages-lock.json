@@ -1,13 +1,5 @@
 {
   "dependencies": {
-    "com.applovin.max-sdk": {
-      "version": "file:ApplovinPackages/com.applovin.max-sdk-5.5.2.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.google.external-dependency-manager": "file:./com.google.external-dependency-manager-1.2.168.tar"
-      }
-    },
     "com.gameanalytics.sdk": {
       "version": "7.4.2",
       "depth": 0,
