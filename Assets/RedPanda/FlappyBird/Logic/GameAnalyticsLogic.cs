@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using WaterToolkit.Data;
+using WaterToolkit.Blackboards;
 
 namespace FlappyBird
 {
@@ -28,8 +28,8 @@ namespace FlappyBird
 
 		private void Awake()
 		{
-			_gameAnalyticsWrapper = Blackboard.Get<GameAnalyticsWrapper>();
-			_flowDirectoryData = Blackboard.Get<FlowDirectoryData>();
+			_gameAnalyticsWrapper = SBlackboard.Get<GameAnalyticsWrapper>();
+			_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
 
 			if(!_isEnableAnalytics || Application.isEditor) {
 				Destroy(_gameAnalyticsWrapper.gameObject);

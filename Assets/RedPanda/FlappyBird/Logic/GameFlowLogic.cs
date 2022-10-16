@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
-using WaterToolkit.Data;
+using WaterToolkit.Scores;
+using WaterToolkit.Sequences;
+using WaterToolkit.Blackboards;
 
 namespace FlappyBird
 {
@@ -9,17 +11,15 @@ namespace FlappyBird
 		private DefaultGameMode _gameMode = null;
 		private DefaultUI _ui = null;
 		private FlowDirectoryData _flowDirectoryData = null;
-		private Sequencer _transition = null;
 		private Fader _fader = null;
-		private Scorer _scorer = null;
-		private DataSerializer dataSerializer = null;
 
 		private void FadeTransition(Action onFinish)
 		{
 			bool isFinish = false;
 
-			_transition.Enqueue(_fader.FadeTo(0, false), 0);
-			_transition.Enqueue(
+			Sequencer sequencer = new Sequencer();
+			sequencer.Enqueue(_fader.FadeTo(0, false), 0);
+			sequencer.Enqueue(
 				_fader.FadeTo(
 					1, true,
 					(float fade) => {
@@ -29,7 +29,7 @@ namespace FlappyBird
 						}
 					})
 				, 10);
-			_transition.Run();
+			sequencer.Run();
 		}
 
 		private void OnStartButtonTapMethod()
@@ -51,8 +51,8 @@ namespace FlappyBird
 
 		private void OnBirdPassThruPipeMethod()
 		{
-			_scorer.current++;
-			_ui.inGameScreen.SetCurrentScore(_scorer.current);
+			SScorer.current++;
+			_ui.inGameScreen.SetCurrentScore(SScorer.current);
 		}
 
 		private void OnBirdCollideOnGroundMethod()
@@ -63,9 +63,9 @@ namespace FlappyBird
 
 		private void OnFlowInitializeVisitMethod()
 		{
-			dataSerializer.Deserialize();
-			ScoreSerializableData scoreData = dataSerializer.Get<ScoreSerializableData>();
-			_scorer.ForceSet(0, scoreData.best);
+			SFlappyGameSerialzer.gameData.Deserialize();
+			ScoreSerializableData scoreData = SFlappyGameSerialzer.gameData.Get<ScoreSerializableData>();
+			SScorer.ForceSet(0, scoreData.best);
 
 			_flowDirectoryData.initialize.Next();
 		}
@@ -73,8 +73,8 @@ namespace FlappyBird
 		private void OnFlowPreGameVisitMethod()
 		{
 			_gameMode.PreGame();
-			_scorer.current = 0;
-			_ui.inGameScreen.SetCurrentScore(_scorer.current);
+			SScorer.current = 0;
+			_ui.inGameScreen.SetCurrentScore(SScorer.current);
 
 			_ui.To(DefaultUI.Mode.PreGame);
 		}
@@ -89,25 +89,22 @@ namespace FlappyBird
 		{
 			_gameMode.StopGame();
 
-			_ui.gameOverScreen.SetCurrentScoreText(_scorer.current);
-			_ui.gameOverScreen.SetBestScoreText(_scorer.best);
+			_ui.gameOverScreen.SetCurrentScoreText(SScorer.current);
+			_ui.gameOverScreen.SetBestScoreText(SScorer.best);
 			
 			_ui.To(DefaultUI.Mode.GameOver);
 
-			ScoreSerializableData scoreData = dataSerializer.Get<ScoreSerializableData>();
-			scoreData.best = _scorer.best;
-			dataSerializer.Serialize();
+			ScoreSerializableData scoreData = SFlappyGameSerialzer.gameData.Get<ScoreSerializableData>();
+			scoreData.best = SScorer.best;
+			SFlappyGameSerialzer.gameData.Serialize();
 		}
 
 		private void Awake()
 		{
-			_gameMode = Blackboard.Get<DefaultGameMode>();
-			_ui = Blackboard.Get<DefaultUI>();
-			_flowDirectoryData = Blackboard.Get<FlowDirectoryData>();
-			_transition = Blackboard.Get<Sequencer>();
-			_fader = Blackboard.Get<Fader>();
-			_scorer = Blackboard.Get<Scorer>();
-			dataSerializer = Blackboard.Get<DataSerializer>();
+			_gameMode = SBlackboard.Get<DefaultGameMode>();
+			_ui = SBlackboard.Get<DefaultUI>();
+			_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
+			_fader = SBlackboard.Get<Fader>();
 		}
 
 		private void Start()

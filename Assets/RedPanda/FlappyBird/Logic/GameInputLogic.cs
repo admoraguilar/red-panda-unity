@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using WaterToolkit.Data;
+using WaterToolkit.Blackboards;
 
 namespace FlappyBird
 {
@@ -14,7 +14,7 @@ namespace FlappyBird
 
 		private void Awake()
 		{
-			_gameMode = Blackboard.Get<DefaultGameMode>();
+			_gameMode = SBlackboard.Get<DefaultGameMode>();
 		}
 
 		private void Update()

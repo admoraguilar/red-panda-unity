@@ -1,0 +1,16 @@
+{
+    "name": "WaterToolkit.Blackboards",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3d1b0d06b8dcbbe408f1a4cf61fb9d20"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

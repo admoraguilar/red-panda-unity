@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using WaterToolkit.Data;
+using WaterToolkit.Blackboards;
 
 namespace FlappyBird
 {
@@ -41,10 +41,10 @@ namespace FlappyBird
 
 		private void Awake()
 		{
-			_audioPlayer = Blackboard.Get<AudioPlayer>();
-			_flowDirectoryData = Blackboard.Get<FlowDirectoryData>();
-			_ui = Blackboard.Get<DefaultUI>();
-			_gameMode = Blackboard.Get<DefaultGameMode>();
+			_audioPlayer = SBlackboard.Get<AudioPlayer>();
+			_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
+			_ui = SBlackboard.Get<DefaultUI>();
+			_gameMode = SBlackboard.Get<DefaultGameMode>();
 		}
 
 		private void OnEnable()
