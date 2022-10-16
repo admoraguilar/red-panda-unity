@@ -57,12 +57,12 @@ namespace FlappyBird
 			if(gamePhase == GamePhase.PreGame) { return; }
 			gamePhase = GamePhase.PreGame;
 
-			groundScroller.shouldScroll = true;
+			if(groundScroller != null) { groundScroller.shouldScroll = true; }
 		}
 
 		public void StartGame()
 		{
-			groundScroller.shouldScroll = true;
+			if(groundScroller != null) { groundScroller.shouldScroll = true; }
 
 			if(gamePhase != GamePhase.InGamePhase1 && !isInGame) {
 				gamePhase = GamePhase.InGamePhase1;
@@ -72,12 +72,16 @@ namespace FlappyBird
 
 				birdInstance.OnCollisionEnter2DCallback += (collision) => {
 					MultiTags tags = collision.collider.GetComponent<MultiTags>();
+					if(tags == null) { return; }
+
 					if(tags.Contains("PipePart")) { OnBirdCollideOnPipe(); }
 					else if(tags.Contains("Ground")) { OnBirdCollideOnGround(); }
 				};
 
 				birdInstance.OnTriggerEnter2DCallback += (collider) => {
 					MultiTags tags = collider.GetComponent<MultiTags>();
+					if(tags == null) { return; }
+
 					if(tags.Contains("PipePart")) { OnBirdCollideOnPipe(); }
 					else if(tags.Contains("PipeSpace")) { OnBirdPassThruPipe(); }
 					else if(tags.Contains("Ground")) { OnBirdCollideOnGround(); }
@@ -104,14 +108,14 @@ namespace FlappyBird
 			if(birdInstance != null) { birdInstance.Hit(); }
 
 			levelGenerator.shouldMove = false;
-			groundScroller.shouldScroll = false;
+			if(groundScroller != null) { groundScroller.shouldScroll = false; }
 		}
 
 		public void CleanupGame()
 		{
 			if(_birdInstance != null) { Destroy(birdInstance.gameObject); }
 			levelGenerator.StopGenerate();
-			groundScroller.shouldScroll = true;
+			if(groundScroller != null) { groundScroller.shouldScroll = true; }
 		}
 	}
 }
