@@ -27,9 +27,7 @@ namespace WaterToolkit.Blackboards
 				resolveIf = resolveIf, 
 				resolver = resolver });
 
-			bool shouldResolve = true;
-			if(resolveIf != null) { shouldResolve = resolveIf(); }
-			if(shouldResolve) { resolver(); }
+			DoResolve();
 		}
 
 		public void RemoveResolvable(object source)
@@ -48,10 +46,16 @@ namespace WaterToolkit.Blackboards
 
 		internal void InternalUpdate()
 		{
+			DoResolve();
+		}
+
+		private void DoResolve(bool forceResolve = false)
+		{
 			RemoveResolvableNulls();
 			foreach(ResolverInfo info in _resolvables) {
 				bool shouldResolve = true;
-				if(info.resolveIf != null) { shouldResolve = info.resolveIf(); }
+				if(forceResolve) { shouldResolve = true; }
+				else { if(info.resolveIf != null) { shouldResolve = info.resolveIf(); } }
 				if(shouldResolve) { info.resolver(); }
 			}
 		}
@@ -124,6 +128,22 @@ namespace WaterToolkit.Blackboards
 			return InternalGetMany(match);
 		}
 
+		public void SwapRange<T>(IEnumerable<T> collection)
+		{
+			RemoveNulls();
+			InternalRemoveAll<T>(m => m is T);
+			PushRange(collection);
+			DoResolve(true);
+		}
+
+		public void Swap<T>(T data)
+		{
+			RemoveNulls();
+			InternalRemoveAll<T>(m => m is T);
+			Push(data);
+			DoResolve(true);
+		}
+
 		public void PushRange<T>(IEnumerable<T> collection)
 		{
 			RemoveNulls();
@@ -174,6 +194,12 @@ namespace WaterToolkit.Blackboards
 		{
 			if(_dataList.Contains(data)) { return; }
 			_dataList.Add(data);
+		}
+
+		private void InternalRemoveAll<T>(Predicate<T> match)
+		{
+			IEnumerable<object> matches = _dataList.Where(d => d is T).Where(d => match((T)d));
+			InternalRemoveRange(matches);
 		}
 
 		private void InternalRemoveRange<T>(IEnumerable<T> collection)
@@ -244,6 +270,10 @@ namespace WaterToolkit.Blackboards
 		public static T Get<T>(Predicate<T> match) => instance.Get(match);
 
 		public static IEnumerable<T> GetMany<T>(Predicate<T> match) => instance.GetMany(match);
+
+		public static void SwapRange<T>(IEnumerable<T> collection) => instance.SwapRange(collection);
+
+		public static void Swap<T>(T data) => instance.Swap(data);
 
 		public static void PushRange<T>(IEnumerable<T> collection) => instance.PushRange(collection);
 
