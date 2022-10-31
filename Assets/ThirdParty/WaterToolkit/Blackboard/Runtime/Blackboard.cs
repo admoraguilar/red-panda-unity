@@ -7,7 +7,54 @@ namespace WaterToolkit.Blackboards
 {
 	public class Blackboard
 	{
+		private class ResolverInfo
+		{
+			public object source;
+			public Action resolver;
+			public Func<bool> resolveIf;
+		}
+
 		private List<object> _dataList = new List<object>();
+		private List<ResolverInfo> _resolvables = new List<ResolverInfo>();
+
+		public void AddResolvable(object source, Action resolver) => AddResolvable(source, null, resolver);
+
+		public void AddResolvable(object source, Func<bool> resolveIf, Action resolver)
+		{
+			RemoveResolvableNulls();
+			_resolvables.Add(new ResolverInfo { 
+				source = source, 
+				resolveIf = resolveIf, 
+				resolver = resolver });
+
+			bool shouldResolve = true;
+			if(resolveIf != null) { shouldResolve = resolveIf(); }
+			if(shouldResolve) { resolver(); }
+		}
+
+		public void RemoveResolvable(object source)
+		{
+			RemoveResolvableNulls();
+			_resolvables.RemoveAll(r => Equals(r, source));
+		}
+
+		private void RemoveResolvableNulls()
+		{
+			_resolvables.RemoveAll(r => {
+				if(r.source is UnityEngine.Object uObj) { return uObj == null; }
+				else { return r.source == null; }
+			});
+		}
+
+		internal void InternalUpdate()
+		{
+			RemoveResolvableNulls();
+			foreach(ResolverInfo info in _resolvables) {
+				bool shouldResolve = true;
+				if(info.resolveIf != null) { shouldResolve = info.resolveIf(); }
+				if(shouldResolve) { info.resolver(); }
+			}
+		}
 
 		public T GetNearest<T>(GameObject source, Predicate<T> match) where T : Component
 		{
@@ -148,6 +195,22 @@ namespace WaterToolkit.Blackboards
 	public static class SBlackboard
 	{
 		public static readonly Blackboard instance = new Blackboard();
+
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+		public static void InitOnLoad()
+		{
+			MonoDelegate del = MonoDelegate.GetOrCreate(nameof(SBlackboard), true);
+			del.UpdateCallback += () => { instance.InternalUpdate(); };
+		}
+
+		public static void AddResolvable(object source, Action resolver) =>
+			instance.AddResolvable(source, resolver);
+
+		public static void AddResolvable(object source, Func<bool> resolveIf, Action resolver) =>
+			instance.AddResolvable(source, resolveIf, resolver);
+
+		public static void RemoveResolvable(object source) =>
+			instance.RemoveResolvable(source);
 
 		public static T GetNearest<T>(GameObject source, Predicate<T> match) where T : Component => 
 			instance.GetNearest(source, match);

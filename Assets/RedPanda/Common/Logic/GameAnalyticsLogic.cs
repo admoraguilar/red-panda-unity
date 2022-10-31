@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using WaterToolkit.Blackboards;
 
 namespace FlappyBird
@@ -28,14 +29,21 @@ namespace FlappyBird
 
 		private void Awake()
 		{
-			_gameAnalyticsWrapper = SBlackboard.Get<GameAnalyticsWrapper>();
-			_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
+			SBlackboard.AddResolvable(
+				this,
+				() => {
+					return _gameAnalyticsWrapper == null || _flowDirectoryData == null;
+				},
+				() => {
+					_gameAnalyticsWrapper = SBlackboard.Get<GameAnalyticsWrapper>();
+					_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
 
-			if(!_isEnableAnalytics || Application.isEditor) {
-				Destroy(_gameAnalyticsWrapper.gameObject);
-				Destroy(gameObject);
-				return;
-			}
+					if(!_isEnableAnalytics || Application.isEditor) {
+						Destroy(_gameAnalyticsWrapper.gameObject);
+						Destroy(gameObject);
+						return;
+					}
+				});
 		}
 
 		private void OnEnable()

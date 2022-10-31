@@ -14,7 +14,12 @@ namespace FlappyBird
 
 		private void Awake()
 		{
-			_gameMode = SBlackboard.Get<DefaultGameMode>();
+			SBlackboard.AddResolvable(
+				this,
+				() => _gameMode == null,
+				() => {
+					_gameMode = SBlackboard.Get<DefaultGameMode>();
+				});
 		}
 
 		private void Update()

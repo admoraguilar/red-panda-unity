@@ -41,10 +41,18 @@ namespace FlappyBird
 
 		private void Awake()
 		{
-			_audioPlayer = SBlackboard.Get<AudioPlayer>();
-			_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
-			_ui = SBlackboard.Get<DefaultUI>();
-			_gameMode = SBlackboard.Get<DefaultGameMode>();
+			SBlackboard.AddResolvable(
+				this,
+				() => {
+					return _audioPlayer == null || _flowDirectoryData == null ||
+						   _ui == null || _gameMode == null;
+				},
+				() => {
+					_audioPlayer = SBlackboard.Get<AudioPlayer>();
+					_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
+					_ui = SBlackboard.Get<DefaultUI>();
+					_gameMode = SBlackboard.Get<DefaultGameMode>();
+				});
 		}
 
 		private void OnEnable()

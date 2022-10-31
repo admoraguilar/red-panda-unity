@@ -101,10 +101,18 @@ namespace FlappyBird
 
 		private void Awake()
 		{
-			_gameMode = SBlackboard.Get<DefaultGameMode>();
-			_ui = SBlackboard.Get<DefaultUI>();
-			_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
-			_fader = SBlackboard.Get<Fader>();
+			SBlackboard.AddResolvable(
+				this,
+				() => {
+					return _gameMode == null || _ui == null ||
+						   _flowDirectoryData == null || _fader == null;
+				},
+				() => {
+					_gameMode = SBlackboard.Get<DefaultGameMode>();
+					_ui = SBlackboard.Get<DefaultUI>();
+					_flowDirectoryData = SBlackboard.Get<FlowDirectoryData>();
+					_fader = SBlackboard.Get<Fader>();
+				});
 		}
 
 		private void Start()
